@@ -1,4 +1,4 @@
-rom cassandra.cluster import Cluster
+from cassandra.cluster import Cluster
 from cassandra.auth import PlainTextAuthProvider
 import pandas as pd
 from datetime import datetime
@@ -16,12 +16,12 @@ class DataLoader:
         
     def setup_database(self):
         self.session.execute("""
-            CREATE KEYSPACE IF NOT EXISTS default_keyspace
+            CREATE KEYSPACE IF NOT EXISTS social_media
             WITH replication = {'class': 'NetworkTopologyStrategy', 'datacenter1': 3}
         """)
         
         self.session.execute("""
-            CREATE TABLE IF NOT EXISTS default_keyspace.post_analysis_data (
+            CREATE TABLE IF NOT EXISTS social_media.post_analysis_data (
                 post_id uuid PRIMARY KEY,
                 post_type text,
                 timestamp timestamp,
@@ -84,7 +84,7 @@ class DataLoader:
         
         # Prepare insert statement and load to database
         insert_query = self.session.prepare("""
-            INSERT INTO default_keyspace.post_analysis_data 
+            INSERT INTO social_media.post_analysis_data 
             (post_id, post_type, timestamp, likes, comments, shares, reach, engagement_rate)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """)
